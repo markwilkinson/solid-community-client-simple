@@ -1,4 +1,5 @@
-# solid-community-client-simple
-A simple Ruby client to interact with SOLID community server PODs
+# SOLID Client for Community Server
 
-# This is not guaranteed to be useful for any purpose whatsoever.
+Talk to SOLID Pods
+
+# This is not guaranteed to be useful for any purpose whatsoever
