@@ -20,7 +20,6 @@ module SOLID
       json['controls']['account']['webId']
     end
 
-    
   end
 end
 
