@@ -6,15 +6,15 @@ Gem::Specification.new do |spec|
   spec.name = 'solid-community-client-simple'
   spec.version = 1
   spec.authors = ['Mark Wilkinson']
-  spec.email = ['markw@illuminae.com']
+  spec.email = ['mark.wilkinson@upm.es']
 
-  spec.summary = 'A simple client to interact with a SOLID POD.'
-  spec.description = 'A simple client to interact with a SOLID POD'
+  spec.summary = 'A simple client to interact with the SOLID Community Server.'
+  spec.description = 'A simple client to interact with the SOLID Community Server'
   spec.homepage = 'https://github.com/markwilkinson/solid-community-client-simple'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.0.6'
 
-  spec.metadata['allowed_push_host'] = 'https://example.com'
+  spec.metadata['allowed_push_host'] = 'https://rubygems.org'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
