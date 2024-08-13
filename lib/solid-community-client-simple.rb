@@ -1,1 +1,1 @@
-require "./solid.rb"
+require_relative "./solid.rb"
