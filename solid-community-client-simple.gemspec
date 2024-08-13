@@ -1,15 +1,13 @@
-# frozen_string_literal: true
-
-# require_relative "tests"
+require_relative "lib/version"
 
 Gem::Specification.new do |spec|
+  spec.version = SOLID::CommunityClient::VERSION
   spec.name = 'solid-community-client-simple'
-  spec.version = 1
   spec.authors = ['Mark Wilkinson']
   spec.email = ['mark.wilkinson@upm.es']
 
   spec.summary = 'A simple client to interact with the SOLID Community Server.'
-  spec.description = 'A simple client to interact with the SOLID Community Server'
+  spec.description = 'A simple client to interact with the SOLID Community Server.  NOTA BENE - this is NOT a fully functional SOLID client. It does only what I need it to do for a specific project.  It may or may not be useful to anyone else.  It is badly documented (if at all!). It has only been tested against the Docker version of the Solid Community Server runnign on localhost.  Don't blame me if it doesn't work for you.  Enough said?'
   spec.homepage = 'https://github.com/markwilkinson/solid-community-client-simple'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.0.6'
