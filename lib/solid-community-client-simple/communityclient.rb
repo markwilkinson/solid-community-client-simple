@@ -1,7 +1,7 @@
 module SOLID
   class CommunityClient
 
-    VERSION = "0.0.4"
+    VERSION = "0.0.5"
 
     require_relative './config'
 

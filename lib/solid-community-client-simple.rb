@@ -1,1 +1,1 @@
-require_relative "./communityclient.rb"
+require_relative "./solid-community-client-simple/communityclient.rb"
