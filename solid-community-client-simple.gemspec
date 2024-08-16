@@ -1,4 +1,4 @@
-require_relative "lib/version"
+require_relative "lib/solid-community-client-simple"
 
 Gem::Specification.new do |spec|
   spec.version = SOLID::CommunityClient::VERSION

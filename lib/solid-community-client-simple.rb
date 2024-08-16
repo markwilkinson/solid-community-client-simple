@@ -1,1 +1,1 @@
-require_relative "./solid.rb"
+require_relative "./communityclient.rb"

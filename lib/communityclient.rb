@@ -1,5 +1,8 @@
 module SOLID
   class CommunityClient
+
+    VERSION = "0.0.4"
+
     require_relative './config'
 
     attr_accessor :username, :password, :server, :account_meta, :login_meta, :credentials_url, :webid_url, :webids,
