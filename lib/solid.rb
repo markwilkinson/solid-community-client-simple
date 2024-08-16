@@ -5,6 +5,15 @@ module SOLID
     attr_accessor :username, :password, :server, :account_meta, :login_meta, :credentials_url, :webid_url, :webids,
                   :css_account_token, :tokenid, :secret, :auth_string, :encoded_auth, :current_access_token
 
+    #
+    # Initialize the SOLID Community Client Object
+    #
+    # @param [String] server The URL of the SOLID Pod you want to interact with
+    # @param [String] username Your SOLID Pod username (defaults to ENV['SOLIDUSER'])
+    # @param [String] password Your SOLID Pod password (default to ENV['SOLIDPASSWORD'])
+    # @param [webid] webid Your WebID that you use for authentication against that POD (default nil)
+    #
+    # @return [SOLID::CommunityClient]
     def initialize(server:, username: ENV['SOLIDUSER'], password: ENV['SOLIDPASSWORD'], webid: nil)
       @username = username
       @password = password
@@ -13,6 +22,17 @@ module SOLID
       @webid = webid
     end
 
+    #
+    # Login to the POD. This creates additional accessors in the SOLID::CommunityClient
+    # Including:  
+    #    #account_meta - this contains the parsed JSON from a GET on the PODs ./accout endpoint
+    #    #login_meta - this contains the parsed JSON from a GET on the PODs login_url (part of the #account_meta)
+    #    #credentials_url - the URL to be used to get credentials for the POD
+    #    #webid_url - the URL to call to get the list of WebIDs that have access to this POD
+    #
+    #
+    # @return [Boolean] Was login successful? (if not, this method will crash, for the moment!  No error tolerance at all!)
+    #
     def login
       account = server + '.account/'
 
@@ -56,6 +76,11 @@ module SOLID
       true
     end
 
+    #
+    # Retrieve the list of WebIDs that have access to this POD
+    #
+    # @return [Array[String]] an array of URL strings that are the webids of all legitimate POD users
+    #
     def get_webids
       resp = RestClient::Request.new({
                                        method: :get,
@@ -71,6 +96,14 @@ module SOLID
       webids
     end
 
+    #
+    # Create the access token for this POD based in your WebID
+    #
+    # @param [String] webid The URL of your WebID
+    # @param [String] name some arbigtrary name to give your token (no sanity checking on the characters right now...)
+    #
+    # @return [String] The access token (this also sets the value of the SOLID::CommunityClient#current_access_token instance method)
+    #
     def create_access_token(webid:, name: 'my-token')
       payload = { "name": name, "webId": webid }.to_json
       warn "", "", credentials_url, css_account_token, payload, "", ""
@@ -116,6 +149,14 @@ module SOLID
       @current_access_token = j['access_token']
     end
 
+    #
+    # Either retrieve or create a valid access token.  This should be used in preference to create_access_token, because it has logic to test the validity of the current token, and renew if it has a remaining lifespan of less than 30 seconds.
+    #
+    # @param [String] webid Your WebID URL
+    # @param [String] name arbitrary string to call your token
+    #
+    # @return [String] The string of a valid token
+    #
     def get_current_access_token(webid:, name: "my-token")
       create_access_token(webid: webid, name: name) unless current_access_token && !(current_access_token.empty?)
 
@@ -141,11 +182,29 @@ module SOLID
       current_access_token
     end
 
+    #
+    # Get the CommunityClient ready to do a specific DPoP interaction.  DPoP requires the URL that you will interact with, adn the HTEP method you will use.  You have to call this method prior to every new kind of interaction with the POD 
+    #
+    # @param [String] url The URL you will interact with
+    # @param [String] method The HTTP Method (e.g. GET)
+    #
+    # @return [SOLID::DPOP] a SOLID::DPOP object
+    #
     def prepare_dpop(url:, method:)
       SOLID::DPOP.new(url: url, method: method)
     end
 
 
+    #
+    # Execute an interaction with a POD (e.g. read or create a resource or container)
+    #
+    # @param [SOLID::DPOP] dpop The appropriate DPOP object (created by #prepare_dpop)
+    # @param [String] data The data in your payload (can be "" but MUST be set, even for a GET!)
+    # @param [String] content_type the MIME Content-type for the data
+    # @param [String] current_access_token Your current access token (from #get_current_access_token)
+    #
+    # @return [RestClient::Response] This has no error checking at all... a failed request will cause a crash
+    #
     def execute_with_proof(dpop:, data:, content_type:, current_access_token:)
 
       req = RestClient::Request.new({
